@@ -20,14 +20,14 @@ a {
     display:flex; /*控制內文字排列方式*/
     justify-content: center; /*主軸(水平)中間對齊*/
     align-items: center; /*交錯軸(垂直)中間對齊*/
-    background-color: lightblue;
+    background-color: #cbe6ef;
     height:250px;
     font-size: 2em; /*子元素為父元素body font的2倍*/
     font-weight: bold;
 }
 .content {
     max-width: 1200px;
-    margin: 20px auto; /* 上邊下邊 | 左邊右邊 */
+    margin: 30px auto; /* 上邊下邊 | 左邊右邊 */
 }
 .small-box {
     display: grid; /*控制內元件small-box div排列方式*/
@@ -38,14 +38,14 @@ a {
 .first-row{
     display: flex; /*控制內元件img和文字排列方式*/
     align-items: center; /*交錯軸(垂直)中間對齊*/
-    background-color: pink;
+    background-color: #bcdfeb;
     grid-column: span 1; /*每個元素占1欄*/
     gap: 10px; /*元素間隔10px*/
 }
 .second-row{
     display: flex; /*控制內元件img和文字排列方式*/
     align-items: center; /*交錯軸(垂直)中間對齊*/
-    background-color: pink;
+    background-color: #bcdfeb;
     grid-column: span 1; /*每個元素占1欄*/
     gap: 10px; /*元素間隔10px*/
 }
@@ -56,7 +56,7 @@ a {
 .big-box {
     display: grid; /*控制內元件big和medium排列方式*/
     grid-template-columns: repeat(6, 1fr); /*縱向分為6欄*/
-    grid-template-rows: repeat(2, 200px); /*橫向分為2排*/
+    grid-template-rows: repeat(2, 250px); /*橫向分為2排*/
     gap: 20px;
     margin: 20px auto; /* 上邊下邊 | 左邊右邊 */
 }
@@ -89,8 +89,7 @@ a {
     top:5px;
     right:5px;
 }
-
-@media(min-width: 601px) and (max-width: 1200px){
+@media screen and (min-width: 601px) and (max-width: 1200px) {
 
     .content {
         max-width: 90%;
@@ -104,7 +103,7 @@ a {
     }
     .big-box {
         grid-template-columns: repeat(4, 1fr); /*縱向分為4欄*/
-        grid-template-rows: repeat(3, 200px); /*橫向分為3排*/
+        grid-template-rows: repeat(3, 250px); /*橫向分為3排*/
     }
     .title9,.title10 {
         grid-column: span 2;
@@ -112,10 +111,14 @@ a {
     .title1,.title6 {
         grid-column: span 1;
     }
-}
 
-@media(min-width: 250px) and (max-width: 600px){
+  }
 
+@media screen and (min-width: 200px) and (max-width: 600px) {
+
+    .welcome {
+        font-size: 7vw; /*子元素隨螢幕縮放*/
+    }
     .header{
         position: relative;
     }
@@ -154,6 +157,7 @@ a {
         text-align: center;
         margin: 20px;
     }
+
     .content {
         max-width: 90%;
     }
@@ -163,17 +167,17 @@ a {
     }  
     .first-row{
         grid-column: span 1; /*每個元素占1欄*/
-        grid-row: span 1; /*每個元素占1排*/
     }
     .second-row{
         grid-column: span 1; /*每個元素占1欄*/
-        grid-row: span 1; /*每個元素占1排*/
     }
     .big-box {
         grid-template-columns: 1fr; /*縱向分為1欄*/
-        grid-template-rows: repeat(10, 200px);/*橫向分為10排*/
+        grid-template-rows: repeat(10, 250px);/*橫向分為10排*/
     }
     .title1,.title6 {
         grid-column: span 1;
     }
-}
+
+  }
+
