@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=0.1" />
+        <meta charset="utf-8" />
+        <title>Javascript: Week 2</title>
+    </head>
+    <body>
+        <script>
+            // Task 1
+            function findAndPrint(messages, currentStation){
+                // 1. 建立捷運路線list
+                const route = {
+                    main: ['Songshan', 'Najing Sanmin', 'Taipei Arena', 'Nanjing Fuxing', 'Songjiang Najing', 'Zhongshan', 'Beimen', 
+                            'Ximen', 'Xiaonanmen', 'Chiang Kai-Shek Memorial Hall', 'Guting', 'Taipower Building', 'Gongguan', 
+                            'Wanlong', 'Jingmei', 'Dapinglin', 'Qizhang', 'Xindian City Hall', 'Xindian'],
+                    sub: ['Qizhang', 'Xiaobitan'],
+                }
+
+                // 2. 如果route內的station有配對到messages，放入matches裡，整理成{name: name, station:[line, index]}格式
+                let matches = []; 
+                Object.entries(messages).forEach(([name, message]) => {
+                    Object.entries(route).forEach(([line, stations]) => {
+                        stations.forEach((station, index) => {
+                            if (message.includes(station)) {
+                                matches.push({name, station: [line, index]});
+                                return;
+                            }
+                        });
+                    });
+                });
+                // 3. 將currentStation整理成{station:[line, index]}格式
+                let current = [];
+                Object.entries(route).forEach(([line, stations]) => {
+                    stations.forEach((station, index) => {
+                        if (station == currentStation) {
+                            current.push({station: [line, index]});
+                            return;
+                        }
+                    })
+                });
+                // 4. 如何判斷最近站點
+                let nearestFriend = null;
+                let minDistance = Infinity;
+                for (let i in current) {
+                    const nearStation = matches
+                        .filter(item => item.station[0] === current[i].station[0])
+                        .map(item => ({
+                            name: item.name,
+                            station: item.station,
+                            distance: Math.abs(item.station[1] - current[i].station[1])
+                        }))
+                        .sort((a, b) => a.distance - b.distance);
+
+                        if (nearStation.length > 0 && nearStation[0].distance < minDistance) {
+                            nearestFriend = nearStation[0]; // 更新最近的朋友
+                            minDistance = nearStation[0].distance; // 更新最小距離
+                        }                        
+                } 
+                return nearestFriend.name;          
+            }
+            const messages = {
+                "Leslie": "I'm at home near Xiaobitan station.",
+                "Bob": "I'm at Ximen MRT station.",
+                "Mary": "I have a drink near Jingmei MRT station.",
+                "Copper": "I just saw a concert at Taipei Arena.",
+                "Vivian": "I'm at Xindian station waiting for you."
+            };
+            console.log("=== Task 1 ===");
+            console.log(findAndPrint(messages, "Wanlong")); // print Mary
+            console.log(findAndPrint(messages, "Songshan")); // print Copper
+            console.log(findAndPrint(messages, "Qizhang")); // print Leslie
+            console.log(findAndPrint(messages, "Ximen")); // print Bob
+            console.log(findAndPrint(messages, "Xindian City Hall")); // print Vivian
+
+            // Task 2
+            function book(consultants, hour, duration, criteria) {
+                // 2. 建立評價標準
+                // 建立以price為標準的list               
+                const sortedPrice = [...consultants].sort((a, b) => a.price - b.price); // price小到大排序
+                const Price = sortedPrice.map(consultant => consultant.name);
+                // 建立以rate為標準的list         
+                const sortedRate = [...consultants].sort((a, b) => b.rate - a.rate); // rate大到小排序
+                const Rate = sortedRate.map(consultant => consultant.name);
+
+                let sortedConsultants;
+                if (criteria == 'price') {
+                    sortedConsultants = Price;
+                } else {
+                    sortedConsultants = Rate;
+                }        
+
+                // 3. 依照 sorted_consultants 順序，依序確認時程是否為空的時段
+                for (const consultant of sortedConsultants) {
+                    let available = true;
+                    for (let h = hour; h < hour + duration; h++) {
+                        if (!schedule[consultant]?.includes(h)) { // Check for availability
+                            available = false;
+                            break; // Exit inner loop if not available at this hour
+                        }
+                    }
+                    if (available) { 
+                    // Remove booked hours from the consultant's schedule
+                        for (let h = hour; h < hour + duration; h++) {
+                            if (schedule[consultant].includes(h)) {
+                            schedule[consultant] = schedule[consultant].filter(t => t !== h);
+                            }
+                        }
+                        return consultant; // Return the available consultant
+                    }
+                }
+                return "No Service";
+            }
+            const consultants = [
+                {"name":"John", "rate":4.5, "price":1000},
+                {"name":"Bob", "rate":3, "price":1200},
+                {"name":"Jenny", "rate":3.8, "price":800}
+            ];
+            // 1. 建立consultants schedule
+            const timeSlot = Array.from({ length: 15 }, (num, i) => i + 8); // 生成從 8 到 22 的數組
+            // 使用 reduce 方法將 schedule 扁平化
+            let schedule = consultants.reduce((acc, consultant) => {
+                acc[consultant.name] = timeSlot; // 使用顧問的名字作為鍵，時間段作為值
+                return acc;
+            }, {});
+            console.log("=== Task 2 ===");
+            console.log(book(consultants, 15, 1, "price")); // Jenny
+            console.log(book(consultants, 11, 2, "price")); // Jenny
+            console.log(book(consultants, 10, 2, "price")); // John
+            console.log(book(consultants, 20, 2, "rate")); // John
+            console.log(book(consultants, 11, 1, "rate")); // Bob
+            console.log(book(consultants, 11, 2, "rate")); // No Service
+            console.log(book(consultants, 14, 3, "price")); // John
+
+            // Task 3
+            function func(...data) {
+                const words = {};    
+                for (let i in data) {
+                    if (data[i].length == 2 || data[i].length == 3) {
+                        //console.log(data[i].substring(1, 2));
+                        const key = data[i].substring(1, 2);
+                        words[key] = (words[key] || 0) + 1; // 如果key存在+1，不存在則初始化為0再+1
+                        //return words[data[i].substring(1, 2)];
+                    }
+                    if (data[i].length == 4 || data[i].length == 5) {
+                        const key = data[i].substring(2, 3);
+                        words[key] = (words[key] || 0) + 1;
+                    }
+                }                              
+                let count_of_ones = 0;
+                let min_char = [];
+                Object.entries(words).forEach(([key, value]) => { 
+                    if (value === 1) {
+                        count_of_ones += 1; // 檢查出現次數為1的key的數量
+                        min_char.push(key); // 找到出現次數最少的字
+                    } 
+                })
+                for (let i in data) {
+                    if (data[i].length == 2 || data[i].length == 3) {
+                        if (data[i].substring(1, 2) === min_char[0] && count_of_ones == 1) {
+                            return data[i];
+                        }
+                    } 
+                    if (data[i].length == 4 || data[i].length == 5) {
+                        if (data[i].substring(2, 3) === min_char[0] && count_of_ones == 1) {
+                            return data[i];
+                        }
+                    }
+                } return "沒有";
+            }
+            console.log("=== Task 3 ===");
+            console.log(func("彭大牆", "陳王明雅", "吳明")); // 彭大牆
+            console.log(func("郭靜雅", "王立強", "郭林靜宜", "郭立恆", "林花花")); // 林花花
+            console.log(func("郭宣雅", "林靜宜", "郭宣恆", "林靜花")); // 沒有
+            console.log(func("郭宣雅", "夏曼藍波安", "郭宣恆")); // 夏曼藍波安
+
+            // Task 4
+            function getNumber(index) {
+                let sequence = [0, 4, 8];
+                for (let i = 3; i <= index + 1; i++) {
+                    sequence.push(sequence[i - 3] + 7);
+                } return sequence[index]
+            }
+            console.log("=== Task 4 ===");
+            console.log(getNumber(1)); // 4
+            console.log(getNumber(5)); // 15
+            console.log(getNumber(10)); // 25
+            console.log(getNumber(30)); // 70
+        </script>
+    </body>
+</html>
