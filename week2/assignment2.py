@@ -6,7 +6,7 @@ def find_and_print(messages, current_station):
                       'Dapinglin', 'Qizhang', 'Xindian City Hall', 'Xindian'],
              'sub': ['Qizhang', 'Xiaobitan']}
 
-    # 2. 建立freind_in_main_index和freind_in_sub_index，格式為 {name: index} {'Leslie': 3, 'Bob': 2, 'Amber': 7}
+    # 2. 建立friend_in_main_index和friend_in_sub_index，格式為 {name: index} {'Leslie': 3, 'Bob': 2, 'Amber': 7}
     friend_in_main_index = {}
     friend_in_sub_index = {}
     for name, message in messages.items():
@@ -42,7 +42,7 @@ def find_and_print(messages, current_station):
     if 'sub' in station_index[current_station]:
         current_index_in_sub = station_index[current_station]['sub']
 
-    # 5. 建立freind_in_main_distance and freind_in_sub_distance，格式為 {name: distance} {'Leslie': 3, 'Bob': 2, 'Amber': 7}
+    # 5. 建立friend_in_main_distance and friend_in_sub_distance，格式為 {name: distance} {'Leslie': 3, 'Bob': 2, 'Amber': 7}
     friend_in_main_distance = {}
     friend_in_sub_distance = {}
     main_min_distance = float('inf')
@@ -60,6 +60,7 @@ def find_and_print(messages, current_station):
     reversed_friend_in_main_distance = {v: k for k, v in friend_in_main_distance.items()}
     reversed_friend_in_sub_distance = {v: k for k, v in friend_in_sub_distance.items()}
 
+    # 7. 如果主線distance小於支線，選擇主線的distance的站名，反之亦然
     if main_min_distance < sub_min_distance:
         return reversed_friend_in_main_distance[main_min_distance]
     else:
@@ -158,3 +159,29 @@ print(get_number(1)) # 4
 print(get_number(5))# 15
 print(get_number(10)) # 25
 print(get_number(30)) # 70
+
+# Task 5
+def find(spaces, stat, n):
+    # 1. 比對spaces和stat確認可以提供的位置，在stat裡搜尋1，建立available_seat = {index: value} {1: 1, 3: 4, 4: 3, 5: 2}
+    available_seat = {}
+    for i in range(len(spaces)):
+        if stat[i] == 1:
+            available_seat[i] = spaces[i]
+
+    # 2. 排序成n起始的序列
+    sorted_seats = sorted(available_seat.values())
+
+    # 3. 搜尋 sorted_seats 大於等於 n的值
+    sorted_seats_n = [x for x in sorted_seats if x >= n]
+
+    if not sorted_seats_n:
+        return -1
+    else:
+        min_value = sorted_seats_n[0]
+        # 4. 以sorted_seats的最小值n，去搜尋它在available_seat的index
+        return list(available_seat.keys())[list(available_seat.values()).index(min_value)]
+
+print("=== Task 5 ===")
+print(find([3, 1, 5, 4, 3, 2], [0, 1, 0, 1, 1, 1], 2)) # print 5
+print(find([1, 0, 5, 1, 3], [0, 1, 0, 1, 1], 4)) # print -1
+print(find([4, 6, 5, 8], [0, 1, 1, 1], 4)) # print 2

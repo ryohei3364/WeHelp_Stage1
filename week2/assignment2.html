@@ -181,11 +181,42 @@
                     sequence.push(sequence[i - 3] + 7);
                 } return sequence[index]
             }
-            console.log("=== Task 4 ===");
-            console.log(getNumber(1)); // 4
-            console.log(getNumber(5)); // 15
-            console.log(getNumber(10)); // 25
-            console.log(getNumber(30)); // 70
+            // Task 5
+            function find(spaces, stat, n) {
+                // 1. 比對spaces和stat確認可以提供的位置，在stat裡搜尋1，建立available_seat = {index: value} {1: 1, 3: 4, 4: 3, 5: 2}
+                const availableSeat = {};
+                for (let i = 0; i <= spaces.length; i++) {
+                    if (stat[i] == 1) {
+                        availableSeat[i] = spaces[i];
+                    }
+                }
+
+                // 2. 排序成n起始的序列
+                const sortedSeats = Object.values(availableSeat).sort((a, b) => a - b); // 小到大排序
+
+                // 3. 搜尋 sortedSeats 大於等於 n的值
+                const nSortedSeats = [];
+
+                for (let i = 0; i <= sortedSeats.length; i++) {
+                    if (sortedSeats[i] >= n) {
+                        nSortedSeats.push(sortedSeats[i])
+                    }
+                }
+
+                if (nSortedSeats.length == 0) {
+                    return -1;
+                } else {
+                    // 4. filter nSortedSeats[0]最小值搜出他在availableSeat的index availableSeat = {index: value} {1: 1, 3: 4, 4: 3, 5: 2}
+                    const minValue = nSortedSeats[0];
+                    const filtered = Object.fromEntries(Object.entries(availableSeat).filter(([k,v]) => v == minValue));
+                    const seatIndex = Object.keys(filtered);
+                    return seatIndex[0];
+                    }
+            }
+            console.log("=== Task 5 ===");
+            console.log(find([3, 1, 5, 4, 3, 2], [0, 1, 0, 1, 1, 1], 2)) // print 5
+            console.log(find([1, 0, 5, 1, 3], [0, 1, 0, 1, 1], 4)) // print -1
+            console.log(find([4, 6, 5, 8], [0, 1, 1, 1], 4)) // print 2
         </script>
     </body>
 </html>
