@@ -23,6 +23,7 @@ def arrange_data_1(data_1):
       latitudes.append(line['latitude']) # Latitude
       serial_list_1.append(line['SERIAL_NO']) # District
       file_list.append(line['filelist']) # ImageURL
+
   return spot_titles, longitudes, latitudes, serial_list_1, file_list
 
 def get_image_urls(file_list):
@@ -30,11 +31,10 @@ def get_image_urls(file_list):
   image_urls = []
 
   for line in file_list:
-    pattern = 'https?:\/\/\S+?\.(?:jpg|jpeg|png|gif)'
+    pattern = r'https?:\/\/\S+?\.(?:jpg|jpeg|png|gif)'
     match = re.findall(pattern, str(line), re.I)
     image_urls.append(match[0])
   return image_urls
-
 
 def sort_data_2(data_2):
   '''Resort data2 with the same sort as data_1'''
@@ -93,6 +93,7 @@ def save_to_json(data, input_name):
    with open(f"{input_name}.csv", "w", newline='', encoding="utf-8-sig") as outfile:
     writer = csv.writer(outfile)
     writer.writerows(data)
+    
 
 # Load data
 data_1 = load_json(Taipei_Tourist_Link_1)
@@ -105,7 +106,6 @@ image_urls = get_image_urls(file_list)
 # Resort the data_2
 sorted_data_2 = sort_data_2(data_2)
 mrt_names, districts = arrange_data_2(sorted_data_2)
-
 
 # combine file 
 spot_file = combine_spot_file()
