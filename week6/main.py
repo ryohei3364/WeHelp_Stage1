@@ -174,10 +174,17 @@ async def createMessage_get(request: Request):
 @app.post("/deleteMessage")
 async def deleteMessage(
   request: Request,
+  member_id: Annotated[str, Form()],
   message_id: Annotated[str, Form()]
-  ):    
-    print(f"Deleting message with ID: {message_id}")
+  ):
+  user_info = request.session.get("user_info")
+  current_member_id = user_info['member_id']
 
+  if not user_info:
+    return RedirectResponse(url="/error?message=沒有登入資訊，請重新登入", status_code=303)   
+  elif current_member_id != int(member_id):
+    return RedirectResponse(url="/error?message=沒有刪除留言的權限，請重新確認", status_code=303)
+  else:
     cursor.execute(
       "DELETE FROM message WHERE id = %s", (message_id,)
     )
