@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>會員系統</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='app.css') }}"/>
+</head>
+<body>
+  <header>
+    {% block header %}
+    歡迎光臨，請註冊登入系統
+    {% endblock %}
+  </header>
+  <main>
+    {% block main %}
+    <form id="signup" action="/signup" method="post">
+      <div class="title">註冊帳號</div>
+      <div>姓名<input type="text" name="name" autocomplete="off" required></div>
+      <div>帳號<input type="text" name="username" autocomplete="off" required></div>
+      <div>密碼<input type="password" name="password" autocomplete="off" required></div>
+      <button type="submit">註冊</button>
+    </form>
+    <hr>
+    <form id="signin" action="/signin" method="post">
+      <div class="title">登入系統</div>
+      <div>帳號<input type="text" name="username" autocomplete="off" required></div>
+      <div>密碼<input type="password" name="password" autocomplete="off" required></div>
+      <button type="submit">登入</button>
+    </form>
+    {% endblock %}   
+  </main>
+  {% block js %}
+
+  {% endblock %}
+</body>
+</html>
